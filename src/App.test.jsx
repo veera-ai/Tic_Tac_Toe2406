@@ -23,11 +23,21 @@ test("players can make moves and alternate turns", () => {
 
 test("game detects win and draw", () => {
   render(<App />);
+  // Testing draw sequence: no winner, all cells filled.
   // X O X
   // X O O
   // O X X
+  //
+  // Indices:  0 | 1 | 2
+  //           3 | 4 | 5
+  //           6 | 7 | 8
+  //
+  // Sequence explained:
+  // 0: X, 1: O, 2: X, 4: O, 3: X, 5: O, 7: X, 6: O, 8: X
+  // - No player completes a winning line.
+  //
   const cells = screen.getAllByRole("gridcell");
-  [0,1,3,2,4,5,7,6,8].forEach(idx => fireEvent.click(cells[idx]));
+  [0, 1, 2, 4, 3, 5, 7, 6, 8].forEach(idx => fireEvent.click(cells[idx]));
   expect(screen.getByText(/It's a draw/i)).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: /Restart game/i }));
   expect(screen.getByText(/Next turn: Player X/i)).toBeInTheDocument();
